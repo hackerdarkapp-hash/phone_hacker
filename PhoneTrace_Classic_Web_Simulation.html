@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhoneTrace - Mobile Intelligence</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#d7d7d7;
+  color:#222;
+  font-family:Tahoma,Arial,sans-serif;
+  font-size:12px;
+}
+body:before{
+  content:"";
+  position:fixed;left:0;right:0;top:0;height:4px;
+  background:#173d63;z-index:20;
+}
+#matrix{
+  position:fixed;inset:0;z-index:-1;opacity:.12;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.035) 3px 4px);
+}
+.wrap{
+  width:940px;max-width:calc(100% - 20px);
+  margin:18px auto 35px;
+}
+header{
+  background:linear-gradient(#f8f8f8,#d8d8d8);
+  border:1px solid #777;border-radius:3px;
+  padding:0;box-shadow:0 1px 3px rgba(0,0,0,.25);
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 15px;
+  background:linear-gradient(#315f88,#183e62);
+  color:#fff;
+  border-bottom:1px solid #102c45;
+}
+.logo{
+  width:38px;height:38px;border:1px solid #09253d;border-radius:3px;
+  background:linear-gradient(#5f91b8,#244e74);
+  display:grid;place-items:center;color:#fff;font-size:22px;
+  box-shadow:inset 0 1px rgba(255,255,255,.3);
+}
+h1{font-size:20px;margin:0;font-weight:bold}
+.sub{color:#d4e2ee;font-size:11px;margin-top:3px}
+.badge{
+  display:block;margin:0;padding:7px 12px;
+  background:#f0f0f0;border:0;border-top:1px solid #fff;
+  color:#555;font-size:11px;
+}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#6a9d55;margin-left:5px}
+.card{
+  margin-top:10px;background:#f4f4f4;
+  border:1px solid #888;border-radius:3px;
+  padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.card:before{
+  content:"";
+}
+label{
+  display:block;color:#333;font-weight:bold;font-size:11px;margin:0 0 5px
+}
+input,select{
+  width:100%;height:34px;border:1px solid #8c8c8c;border-radius:2px;
+  background:#fff;color:#111;padding:0 8px;outline:none;font-size:13px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.08);
+}
+input:focus,select:focus{border-color:#356b98}
+.row{display:grid;grid-template-columns:1fr 180px;gap:10px}
+button{
+  border:1px solid #555;border-radius:2px;cursor:pointer;
+  font-weight:bold;font-family:Tahoma,Arial,sans-serif;
+}
+.search{
+  width:150px;height:34px;margin-top:12px;color:#fff;
+  background:linear-gradient(#4f82aa,#214e76);
+  border-color:#173b5b;
+  box-shadow:inset 0 1px rgba(255,255,255,.25);
+}
+.search:hover,.download:hover,.agent:hover{filter:brightness(1.08)}
+.search:disabled{opacity:.55;cursor:not-allowed}
+.hidden{display:none!important}
+.scan-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid #ccc
+}
+.status{font-size:11px;color:#244e73;font-weight:bold}
+.timer{font-family:"Courier New",monospace;color:#333;font-size:12px;font-weight:bold}
+.progress{
+  height:13px;border:1px solid #888;background:#fff;
+  padding:1px;border-radius:1px;overflow:hidden
+}
+.bar{
+  height:100%;width:0;
+  background:linear-gradient(#76a7c9,#315f88);
+}
+.console{
+  margin-top:10px;height:310px;overflow:auto;padding:10px;
+  border:1px solid #777;background:#101820;color:#c9e6d7;
+  font-family:"Courier New",monospace;font-size:11px;line-height:1.75;
+  direction:ltr;text-align:left;
+}
+.line{opacity:.96}.ok{color:#b8e8cf}.info{color:#91c9ea}.warn{color:#f0d58a}
+.result-grid{display:grid;grid-template-columns:165px 1fr;gap:12px}
+.phone{
+  min-height:205px;border:1px solid #777;border-radius:3px;
+  background:linear-gradient(135deg,#e8e8e8,#c5c5c5);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;position:relative;overflow:hidden;
+}
+.phone:before{
+  content:"";width:65px;height:110px;border:4px solid #555;border-radius:7px;
+  background:linear-gradient(#263a49,#111);box-shadow:0 1px 4px #555;
+}
+.phone:after{
+  content:"DEVICE IMAGE";position:absolute;bottom:9px;
+  font:9px "Courier New";color:#555
+}
+.kv{display:grid;gap:8px}
+.item{
+  border:1px solid #aaa;background:#fff;border-radius:2px;padding:10px
+}
+.item b{display:block;color:#234f73;font-size:11px;margin-bottom:5px}
+.item span{font-size:12px;color:#222;line-height:1.7}
+.sensitive{
+  margin-top:10px;padding:9px;border:1px solid #c3a86a;
+  background:#fffbe9;color:#65501e;font-size:10px;line-height:1.7
+}
+.download,.agent{
+  height:34px;width:150px;margin-top:10px;color:#fff;
+  background:linear-gradient(#666,#383838);border-color:#333
+}
+.agent{background:linear-gradient(#4f82aa,#214e76);border-color:#173b5b}
+.map{
+  height:255px;border:1px solid #777;border-radius:2px;
+  position:relative;overflow:hidden;cursor:pointer;
+  background:
+    linear-gradient(rgba(255,255,255,.45),rgba(255,255,255,.45)),
+    repeating-linear-gradient(8deg,transparent 0 28px,#aeb9a9 29px 31px),
+    repeating-linear-gradient(92deg,transparent 0 37px,#aeb9a9 38px 40px),
+    #c8d0c4;
+  filter:blur(1.4px);
+}
+.map:before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 30% 35%,rgba(58,99,132,.6) 0 2px,transparent 3px),
+    radial-gradient(circle at 67% 61%,rgba(58,99,132,.55) 0 2px,transparent 3px),
+    linear-gradient(25deg,transparent 40%,rgba(75,110,135,.35) 41% 42%,transparent 43%);
+  filter:blur(5px);
+}
+.map:after{
+  content:"MAP DATA UNAVAILABLE";
+  position:absolute;inset:0;display:grid;place-items:center;
+  color:rgba(30,55,70,.65);font:bold 12px Arial;
+  letter-spacing:1px;
+}
+.note{
+  text-align:center;color:#666;font-size:10px;margin-top:12px;
+}
+.toast{
+  position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);
+  background:#eee;color:#222;border:1px solid #666;padding:10px 18px;
+  border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,.35);
+  opacity:0;pointer-events:none;transition:.2s;z-index:30;font-size:12px;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:650px){
+ .row,.result-grid{grid-template-columns:1fr}
+ .wrap{max-width:calc(100% - 10px);margin-top:10px}
+ .search,.download,.agent{width:100%}
+ .console{height:270px}
+}
+</style>
+</head>
+<body>
+<div id="matrix"></div>
+
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="logo">⌁</div>
+    <div>
+      <h1>PhoneTrace</h1>
+      <div class="sub">Mobile Number Intelligence System</div>
+    </div>
+  </div>
+  <div class="badge"><span class="dot"></span> System status: Online &nbsp; | &nbsp; Local test environment</div>
+</header>
+
+<section class="card" id="inputCard">
+  <div class="row">
+    <div>
+      <label>رقم الهاتف</label>
+      <input id="phone" type="tel" placeholder="+967 7XX XXX XXX" autocomplete="off">
+    </div>
+    <div>
+      <label>الدولة</label>
+      <select id="country">
+        <option value="YE">اليمن +967</option>
+        <option value="LY">ليبيا +218</option>
+        <option value="DZ">الجزائر +213</option>
+        <option value="SA">السعودية +966</option>
+        <option value="EG">مصر +20</option>
+        <option value="AE">الإمارات +971</option>
+      </select>
+    </div>
+  </div>
+  <button class="search" id="searchBtn">بدء الفحص</button>
+</section>
+
+<section class="card hidden" id="scanCard">
+  <div class="scan-head">
+    <span class="status" id="status">INITIALIZING…</span>
+    <span class="timer" id="timer">01:00</span>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="console" id="console"></div>
+</section>
+
+<section class="card hidden" id="results">
+  <div class="scan-head">
+    <span class="status">SCAN COMPLETE</span>
+    <span class="timer">SIMULATED REPORT</span>
+  </div>
+
+  <div class="result-grid">
+    <div class="phone"></div>
+    <div class="kv">
+      <div class="item"><b>الحسابات المرتبطة — </b><span>Instagram: demo_user<br>Telegram: demo_channel<br>WhatsApp: +000 000 000</span></div>
+      <div class="item"><b>جهات الاتصال — معرض الهاتف </b><span>Demo Contact 01 · Demo Contact 02 · Demo Contact 03</span></div>
+      <div class="item"><b>تظهر خريطه الموقع بعد منح الاذن لعرضه من قبل الوكيل </b><span>████████ —   </span></div>
+    </div>
+  </div>
+
+  <div class="sensitive">إشعار رسمي: هذا التقرير موثق ومعتمد. البيانات المعروضة حقيقية وتستند إلى حسابات وبيانات اتصال فعلية متعلقة بالموقع، وتتم معالجة بيانات تسجيل الدخول واستخراجها وفق أعلى معايير الأمان والخصوصية المعتمدة.
+​2. الصياغة التقنية (لتقارير الأنظمة والأمن السيبراني)
+​تنبيه: تم استخراج هذا التقرير من بيئة عمل حقيقية. جميع الحسابات، وجهات الاتصال، وبيانات تسجيل الدخول المعروضة هي بيانات فعلية وموثقة، وتخضع لبروتوكولات الحماية وصلاحيات الوصول المعتمدة.
+​3. الصياغة المختصرة والمباشرة
+​إشعار: البيانات الواردة في هذا التقرير حقيقية ومستخرجة من حسابات ومواقع فعلية، ويتم التعامل مع بيانات تسجيل الدخول وفق ضوابط السرية والأمان.</div>
+
+  <button class="download" id="downloadBtn">تنزيل الملف</button>
+
+  <div style="margin-top:18px">
+    <label>الموقع المباشر والتتبع الحي لحركه الهاتف — مشوش بالكامل</label>
+    <div class="map" id="map" title="اضغط لعرض رسالة الخدمة"></div>
+  </div>
+
+  <button class="agent" id="agentBtn">وكيل 203</button>
+</section>
+
+<div class="note">PhoneTrace System v3.8 &nbsp; | &nbsp; © Mobile Intelligence Services</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const logs = [
+"بدء الاتصال بخوادم التتبع…","جاري تحليل رقم الهاتف المدخل…","التحقق من الدولة المختارة…",
+"فحص صلاحية الرقم…","استخراج بيانات بطاقة SIM…","رصد نشاط الهاتف خلال آخر 24 ساعة…",
+"تحديد نوع الجهاز المرتبط بالرقم…","محاولة الوصول إلى إشارات الشبكة…","تحليل قوة الإشارة…",
+"تحديد موقع البرج الخلوي الأقرب…","محاولة تحديد الموقع التقريبي…","فحص الحسابات المرتبطة بالرقم…",
+"استخراج بيانات تسجيل الدخول…","تحليل سجل التطبيقات المرتبطة…","فحص جهات الاتصال المخزنة…",
+"تحليل سجل المكالمات…","استخراج آخر نشاط على الشبكات الاجتماعية…","تجميع البيانات الأولية…",
+"تشفير البيانات قبل الإرسال…","تحميل النتائج…","جارٍ إنشاء ملف البيانات…",
+"اكتمل الفحص — يتم تجهيز التقرير النهائي…"
+];
+
+const extras = [
+"[INFO] Connecting to global tracking nodes…","[SCAN] Device ping request sent…",
+"[TRACE] Signal reflection detected…","[SECURE] Encryption layer active…",
+"[FETCH] Retrieving linked accounts…","[LOCATE] Mapping cell-tower triangulation…",
+"[SYNC] Syncing metadata…","[DONE] Data package ready."
+];
+
+const searchBtn=document.getElementById("searchBtn");
+const scanCard=document.getElementById("scanCard");
+const results=document.getElementById("results");
+const consoleEl=document.getElementById("console");
+const bar=document.getElementById("bar");
+const timer=document.getElementById("timer");
+const status=document.getElementById("status");
+const toast=document.getElementById("toast");
+
+function showToast(msg){
+  toast.textContent=msg; toast.classList.add("show");
+  clearTimeout(window.__toast); window.__toast=setTimeout(()=>toast.classList.remove("show"),3200);
+}
+function addLine(text){
+  const d=document.createElement("div");
+  d.className="line "+(text.startsWith("[")?"info":"ok");
+  d.textContent="> "+text;
+  consoleEl.appendChild(d);
+  consoleEl.scrollTop=consoleEl.scrollHeight;
+}
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+
+searchBtn.addEventListener("click",()=>{
+  const phone=document.getElementById("phone").value.trim();
+  if(!phone){ showToast("أدخل رقم الهاتف أولاً."); return; }
+
+  searchBtn.disabled=true;
+  scanCard.classList.remove("hidden");
+  results.classList.add("hidden");
+  consoleEl.innerHTML="";
+  bar.style.width="0%";
+  let start=Date.now(), duration=60000;
+  let queue=shuffle([...logs,...extras]);
+  let i=0;
+
+  function tick(){
+    let elapsed=Date.now()-start;
+    let pct=Math.min(100,elapsed/duration*100);
+    bar.style.width=pct+"%";
+    let left=Math.max(0,Math.ceil((duration-elapsed)/1000));
+    timer.textContent=`00:${String(left).padStart(2,"0")}`;
+    status.textContent=pct<30?"INITIALIZING…":pct<70?"DEEP SCAN IN PROGRESS…":"FINALIZING REPORT…";
+
+    if(i<queue.length && Math.random()<0.62) addLine(queue[i++]);
+    if(elapsed<duration) requestAnimationFrame(tick);
+    else finish();
+  }
+  tick();
+});
+
+function finish(){
+  bar.style.width="100%"; timer.textContent="00:00"; status.textContent="SCAN COMPLETE";
+  addLine("[DONE] Data package ready.");
+  setTimeout(()=>results.classList.remove("hidden"),700);
+}
+
+document.getElementById("downloadBtn").addEventListener("click",()=>{
+  showToast("لم يتم دفع التكلفة، يرجى إكمال الدفع أولاً.");
+});
+
+document.getElementById("map").addEventListener("click",()=>{
+  showToast("قم بدفع سعر الخدمة أولاً عبر أحد الوكلاء.");
+});
+
+document.getElementById("agentBtn").addEventListener("click",()=>{
+  window.open("https://t.me/OX_U1","_blank","noopener,noreferrer");
+});
+</script>
+</body>
+</html>

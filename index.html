@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PhoneTrace — واجهة محاكاة عربية لفحص رقم هاتف بشكل تجريبي، مع قائمة شاملة للدول ورموز الاتصال. النتائج المعروضة محاكاة وليست بيانات حقيقية.">
 <title>PhoneTrace - Mobile Intelligence</title>
 <style>
 *{box-sizing:border-box}
@@ -117,7 +118,7 @@ button{
   background:linear-gradient(#263a49,#111);box-shadow:0 1px 4px #555;
 }
 .phone:after{
-  content:"DEVICE IMAGE";position:absolute;bottom:9px;
+  content:"";position:absolute;bottom:9px;
   font:9px "Courier New";color:#555
 }
 .kv{display:grid;gap:8px}
@@ -169,12 +170,22 @@ button{
   opacity:0;pointer-events:none;transition:.2s;z-index:30;font-size:12px;
 }
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:650px){
+
+.download-progress{margin-top:10px;padding:10px;border:1px solid #999;background:#fff}
+.download-progress .pct{font-weight:bold;margin-bottom:6px}
+.progress.download-bar{height:16px}
+.progress.download-bar .bar{transition:width .05s linear}
+.share-btn{height:34px;width:150px;margin-top:10px;color:#fff;background:linear-gradient(#5b8e5a,#315a31);border-color:#294d29}
+.password-box{margin-top:10px;padding:10px;border:1px solid #999;background:#fafafa}
+.password-box input{margin-top:6px}
+\n@media(max-width:650px){
  .row,.result-grid{grid-template-columns:1fr}
  .wrap{max-width:calc(100% - 10px);margin-top:10px}
  .search,.download,.agent{width:100%}
  .console{height:270px}
 }
+
+.download-page{margin-top:10px}.download-page .phone-number{font-size:18px;font-weight:bold;color:#234f73;direction:ltr;text-align:center;padding:10px;background:#fff;border:1px solid #aaa}.download-page .big-download{width:100%;height:42px;margin-top:12px}.download-page .map-wrap{height:280px;overflow:hidden;border:1px solid #777;border-radius:2px;position:relative;background:#ddd}.download-page .map-wrap iframe{width:100%;height:100%;border:0;filter:blur(2.5px);transform:scale(1.025)}.download-page .map-cover{position:absolute;inset:0;background:rgba(255,255,255,.08);pointer-events:none}.download-page .share-btn{height:38px;width:100%;margin-top:10px;color:#fff;background:linear-gradient(#4f82aa,#214e76);border:1px solid #173b5b;border-radius:2px;font-weight:bold;cursor:pointer}.encrypted-note{margin-top:10px;padding:9px;border:1px solid #c3a86a;background:#fffbe9;color:#65501e;font-size:10px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -186,29 +197,237 @@ button{
     <div class="logo">⌁</div>
     <div>
       <h1>PhoneTrace</h1>
-      <div class="sub">Mobile Number Intelligence System</div>
+      <div class="sub">«نظام متقدم لتحليل أرقام الهاتف ومعلومات الاتصالات»— اللغة الافتراضية: العربية</div>
     </div>
   </div>
   <div class="badge"><span class="dot"></span> System status: Online &nbsp; | &nbsp; Local test environment</div>
 </header>
+
+<section class="card" id="systemDescription">
+  <h2 style="margin:0 0 8px;color:#234f73;font-size:16px">وصف النظام</h2>
+  <p style="margin:0;line-height:1.9;color:#333">
+    PhoneTrace هو نظام متقدم لتحليل أرقام الهواتف وتحديد المعلومات المرتبطة بها،
+    يتيح إجراء عمليات بحث وتحليل رقمية اعتمادًا على رقم الهاتف والدولة المحددة.
+    يدعم النظام أرقام الهواتف من مختلف دول العالم، مع تحديد الدولة ورمز الاتصال
+    الدولي وإجراء عمليات التحقق والتحليل المتعلقة بالرقم.
+  </p>
+  <p style="margin:8px 0 0;line-height:1.9;color:#333">
+    تشمل وظائف النظام، وفقًا للصلاحيات ومصادر البيانات المتاحة: التحقق من صحة
+    الرقم والدولة، تحليل بيانات مشغل الاتصالات ونوع الشبكة عند توفرها، تحليل
+    البيانات الوصفية، عرض المعلومات المرتبطة بالرقم عند توفر مصدر بيانات مصرح،
+    وعرض معلومات الموقع الجغرافي عند توفر بيانات موقع مصرح بها، إضافة إلى إنشاء
+    تقرير منظم بنتائج التحليل.
+  </p>
+  <div class="sensitive" style="margin-top:10px">قم بادخال الرقم وبداء التنفيذ</div>
+</section>
 
 <section class="card" id="inputCard">
   <div class="row">
     <div>
       <label>رقم الهاتف</label>
       <input id="phone" type="tel" placeholder="+967 7XX XXX XXX" autocomplete="off">
-    </div>
-    <div>
-      <label>الدولة</label>
-      <select id="country">
-        <option value="YE">اليمن +967</option>
-        <option value="LY">ليبيا +218</option>
-        <option value="DZ">الجزائر +213</option>
-        <option value="SA">السعودية +966</option>
-        <option value="EG">مصر +20</option>
-        <option value="AE">الإمارات +971</option>
-      </select>
-    </div>
+
+      <div class="country-box" style="margin-top:10px">
+        <label for="country">الدولة</label>
+        <input id="countrySearch" type="search" aria-hidden="true" tabindex="-1" style="display:none">
+        <select id="country" aria-label="الدولة">
+                    <option value="AF">أفغانستان +93</option>
+          <option value="AL">ألبانيا +355</option>
+          <option value="DZ">الجزائر +213</option>
+          <option value="AD">أندورا +376</option>
+          <option value="AO">أنغولا +244</option>
+          <option value="AG">أنتيغوا وبربودا +1</option>
+          <option value="AR">الأرجنتين +54</option>
+          <option value="AM">أرمينيا +374</option>
+          <option value="AU">أستراليا +61</option>
+          <option value="AT">النمسا +43</option>
+          <option value="AZ">أذربيجان +994</option>
+          <option value="BS">الباهاما +1</option>
+          <option value="BH">البحرين +973</option>
+          <option value="BD">بنغلاديش +880</option>
+          <option value="BB">بربادوس +1</option>
+          <option value="BY">بيلاروسيا +375</option>
+          <option value="BE">بلجيكا +32</option>
+          <option value="BZ">بليز +501</option>
+          <option value="BJ">بنين +229</option>
+          <option value="BT">بوتان +975</option>
+          <option value="BO">بوليفيا +591</option>
+          <option value="BA">البوسنة والهرسك +387</option>
+          <option value="BW">بوتسوانا +267</option>
+          <option value="BR">البرازيل +55</option>
+          <option value="BN">بروناي +673</option>
+          <option value="BG">بلغاريا +359</option>
+          <option value="BF">بوركينا فاسو +226</option>
+          <option value="BI">بوروندي +257</option>
+          <option value="CV">الرأس الأخضر +238</option>
+          <option value="KH">كمبوديا +855</option>
+          <option value="CM">الكاميرون +237</option>
+          <option value="CA">كندا +1</option>
+          <option value="CF">جمهورية أفريقيا الوسطى +236</option>
+          <option value="TD">تشاد +235</option>
+          <option value="CL">تشيلي +56</option>
+          <option value="CN">الصين +86</option>
+          <option value="CO">كولومبيا +57</option>
+          <option value="KM">جزر القمر +269</option>
+          <option value="CG">جمهورية الكونغو +242</option>
+          <option value="CD">جمهورية الكونغو الديمقراطية +243</option>
+          <option value="CR">كوستاريكا +506</option>
+          <option value="CI">ساحل العاج +225</option>
+          <option value="HR">كرواتيا +385</option>
+          <option value="CU">كوبا +53</option>
+          <option value="CY">قبرص +357</option>
+          <option value="CZ">التشيك +420</option>
+          <option value="DK">الدنمارك +45</option>
+          <option value="DJ">جيبوتي +253</option>
+          <option value="DM">دومينيكا +1</option>
+          <option value="DO">جمهورية الدومينيكان +1</option>
+          <option value="EC">الإكوادور +593</option>
+          <option value="EG">مصر +20</option>
+          <option value="SV">السلفادور +503</option>
+          <option value="GQ">غينيا الاستوائية +240</option>
+          <option value="ER">إريتريا +291</option>
+          <option value="EE">إستونيا +372</option>
+          <option value="SZ">إسواتيني +268</option>
+          <option value="ET">إثيوبيا +251</option>
+          <option value="FJ">فيجي +679</option>
+          <option value="FI">فنلندا +358</option>
+          <option value="FR">فرنسا +33</option>
+          <option value="GA">الغابون +241</option>
+          <option value="GM">غامبيا +220</option>
+          <option value="GE">جورجيا +995</option>
+          <option value="DE">ألمانيا +49</option>
+          <option value="GH">غانا +233</option>
+          <option value="GR">اليونان +30</option>
+          <option value="GD">غرينادا +1</option>
+          <option value="GT">غواتيمالا +502</option>
+          <option value="GN">غينيا +224</option>
+          <option value="GW">غينيا بيساو +245</option>
+          <option value="GY">غيانا +592</option>
+          <option value="HT">هايتي +509</option>
+          <option value="HN">هندوراس +504</option>
+          <option value="HU">المجر +36</option>
+          <option value="IS">آيسلندا +354</option>
+          <option value="IN">الهند +91</option>
+          <option value="ID">إندونيسيا +62</option>
+          <option value="IR">إيران +98</option>
+          <option value="IQ">العراق +964</option>
+          <option value="IE">أيرلندا +353</option>
+          <option value="IT">إيطاليا +39</option>
+          <option value="JM">جامايكا +1</option>
+          <option value="JP">اليابان +81</option>
+          <option value="JO">الأردن +962</option>
+          <option value="KZ">كازاخستان +7</option>
+          <option value="KE">كينيا +254</option>
+          <option value="KI">كيريباتي +686</option>
+          <option value="KP">كوريا الشمالية +850</option>
+          <option value="KR">كوريا الجنوبية +82</option>
+          <option value="KW">الكويت +965</option>
+          <option value="KG">قيرغيزستان +996</option>
+          <option value="LA">لاوس +856</option>
+          <option value="LV">لاتفيا +371</option>
+          <option value="LB">لبنان +961</option>
+          <option value="LS">ليسوتو +266</option>
+          <option value="LR">ليبيريا +231</option>
+          <option value="LY">ليبيا +218</option>
+          <option value="LI">ليختنشتاين +423</option>
+          <option value="LT">ليتوانيا +370</option>
+          <option value="LU">لوكسمبورغ +352</option>
+          <option value="MG">مدغشقر +261</option>
+          <option value="MW">ملاوي +265</option>
+          <option value="MY">ماليزيا +60</option>
+          <option value="MV">المالديف +960</option>
+          <option value="ML">مالي +223</option>
+          <option value="MT">مالطا +356</option>
+          <option value="MH">جزر مارشال +692</option>
+          <option value="MR">موريتانيا +222</option>
+          <option value="MU">موريشيوس +230</option>
+          <option value="MX">المكسيك +52</option>
+          <option value="FM">ميكرونيزيا +691</option>
+          <option value="MD">مولدوفا +373</option>
+          <option value="MC">موناكو +377</option>
+          <option value="MN">منغوليا +976</option>
+          <option value="ME">الجبل الأسود +382</option>
+          <option value="MA">المغرب +212</option>
+          <option value="MZ">موزمبيق +258</option>
+          <option value="MM">ميانمار +95</option>
+          <option value="NA">ناميبيا +264</option>
+          <option value="NR">ناورو +674</option>
+          <option value="NP">نيبال +977</option>
+          <option value="NL">هولندا +31</option>
+          <option value="NZ">نيوزيلندا +64</option>
+          <option value="NI">نيكاراغوا +505</option>
+          <option value="NE">النيجر +227</option>
+          <option value="NG">نيجيريا +234</option>
+          <option value="MK">مقدونيا الشمالية +389</option>
+          <option value="NO">النرويج +47</option>
+          <option value="OM">عُمان +968</option>
+          <option value="PK">باكستان +92</option>
+          <option value="PW">بالاو +680</option>
+          <option value="PS">فلسطين +970</option>
+          <option value="PA">بنما +507</option>
+          <option value="PG">بابوا غينيا الجديدة +675</option>
+          <option value="PY">باراغواي +595</option>
+          <option value="PE">بيرو +51</option>
+          <option value="PH">الفلبين +63</option>
+          <option value="PL">بولندا +48</option>
+          <option value="PT">البرتغال +351</option>
+          <option value="QA">قطر +974</option>
+          <option value="RO">رومانيا +40</option>
+          <option value="RU">روسيا +7</option>
+          <option value="RW">رواندا +250</option>
+          <option value="KN">سانت كيتس ونيفيس +1</option>
+          <option value="LC">سانت لوسيا +1</option>
+          <option value="VC">سانت فنسنت والغرينادين +1</option>
+          <option value="WS">ساموا +685</option>
+          <option value="SM">سان مارينو +378</option>
+          <option value="ST">ساو تومي وبرينسيب +239</option>
+          <option value="SA">السعودية +966</option>
+          <option value="SN">السنغال +221</option>
+          <option value="RS">صربيا +381</option>
+          <option value="SC">سيشل +248</option>
+          <option value="SL">سيراليون +232</option>
+          <option value="SG">سنغافورة +65</option>
+          <option value="SK">سلوفاكيا +421</option>
+          <option value="SI">سلوفينيا +386</option>
+          <option value="SB">جزر سليمان +677</option>
+          <option value="SO">الصومال +252</option>
+          <option value="ZA">جنوب أفريقيا +27</option>
+          <option value="SS">جنوب السودان +211</option>
+          <option value="ES">إسبانيا +34</option>
+          <option value="LK">سريلانكا +94</option>
+          <option value="SD">السودان +249</option>
+          <option value="SR">سورينام +597</option>
+          <option value="SE">السويد +46</option>
+          <option value="CH">سويسرا +41</option>
+          <option value="SY">سوريا +963</option>
+          <option value="TJ">طاجيكستان +992</option>
+          <option value="TZ">تنزانيا +255</option>
+          <option value="TH">تايلاند +66</option>
+          <option value="TL">تيمور الشرقية +670</option>
+          <option value="TG">توغو +228</option>
+          <option value="TO">تونغا +676</option>
+          <option value="TT">ترينيداد وتوباغو +1</option>
+          <option value="TN">تونس +216</option>
+          <option value="TR">تركيا +90</option>
+          <option value="TM">تركمانستان +993</option>
+          <option value="TV">توفالو +688</option>
+          <option value="UG">أوغندا +256</option>
+          <option value="UA">أوكرانيا +380</option>
+          <option value="AE">الإمارات +971</option>
+          <option value="GB">المملكة المتحدة +44</option>
+          <option value="US">الولايات المتحدة +1</option>
+          <option value="UY">أوروغواي +598</option>
+          <option value="UZ">أوزبكستان +998</option>
+          <option value="VU">فانواتو +678</option>
+          <option value="VA">الفاتيكان +379</option>
+          <option value="VE">فنزويلا +58</option>
+          <option value="VN">فيتنام +84</option>
+          <option value="YE">اليمن +967</option>
+          <option value="ZM">زامبيا +260</option>
+          <option value="ZW">زيمبابوي +263</option>
+        </select>
+      </div>    </div>
+    
   </div>
   <button class="search" id="searchBtn">بدء الفحص</button>
 </section>
@@ -216,44 +435,36 @@ button{
 <section class="card hidden" id="scanCard">
   <div class="scan-head">
     <span class="status" id="status">INITIALIZING…</span>
-    <span class="timer" id="timer">01:00</span>
+    <span class="timer" id="timer">00:30</span>
   </div>
   <div class="progress"><div class="bar" id="bar"></div></div>
   <div class="console" id="console"></div>
 </section>
 
 <section class="card hidden" id="results">
-  <div class="scan-head">
-    <span class="status">SCAN COMPLETE</span>
-    <span class="timer">SIMULATED REPORT</span>
+  <div class="scan-head"><span class="status">SCAN COMPLETE</span><span class="timer">SIMULATED REPORT</span></div>
+  <div class="sensitive">انتهت المحاكاة بنجاح. البيانات المعروضة تجريبية والأسماء والأرقام الواردة في ملف جهات الاتصال وهمية.</div>
+</section>
+
+<section class="card hidden download-page" id="downloadPage">
+  <div class="scan-head"><span class="status">صفحة تحميل الملف</span><span class="timer">READY</span></div>
+  <div class="item"><b>رقم الهاتف الذي تم البحث عنه</b><div class="phone-number" id="downloadPhone">—</div></div><div class="item" style="margin-top:10px"><b>بيانات الشبكة — </b><div style="line-height:1.9;margin-top:6px">الدولة: <span id="downloadCountry">—</span><br>محتوى الملف <span id="downloadNetwork">ارقام هواتف — رسائل نصيه</span><br>IP الهاتف: <span id="downloadIp">192.0.2.1 — عنوان </span></div></div><div class="item" style="margin-top:10px;text-align:center"><div style="font-size:34px">📄</div><b>ملف نصي محمي TXT</b></div>
+  <div class="download-progress hidden" id="downloadProgress">
+    <div class="pct">جاري تجهيز الملف: <span id="downloadPct">1%</span></div>
+    <div class="progress download-bar"><div class="bar" id="downloadBar"></div></div>
   </div>
-
-  <div class="result-grid">
-    <div class="phone"></div>
-    <div class="kv">
-      <div class="item"><b>الحسابات المرتبطة — </b><span>Instagram: demo_user<br>Telegram: demo_channel<br>WhatsApp: +000 000 000</span></div>
-      <div class="item"><b>جهات الاتصال — معرض الهاتف </b><span>Demo Contact 01 · Demo Contact 02 · Demo Contact 03</span></div>
-      <div class="item"><b>تظهر خريطه الموقع بعد منح الاذن لعرضه من قبل الوكيل </b><span>████████ —   </span></div>
-    </div>
-  </div>
-
-  <div class="sensitive">إشعار رسمي: هذا التقرير موثق ومعتمد. البيانات المعروضة حقيقية وتستند إلى حسابات وبيانات اتصال فعلية متعلقة بالموقع، وتتم معالجة بيانات تسجيل الدخول واستخراجها وفق أعلى معايير الأمان والخصوصية المعتمدة.
-​2. الصياغة التقنية (لتقارير الأنظمة والأمن السيبراني)
-​تنبيه: تم استخراج هذا التقرير من بيئة عمل حقيقية. جميع الحسابات، وجهات الاتصال، وبيانات تسجيل الدخول المعروضة هي بيانات فعلية وموثقة، وتخضع لبروتوكولات الحماية وصلاحيات الوصول المعتمدة.
-​3. الصياغة المختصرة والمباشرة
-​إشعار: البيانات الواردة في هذا التقرير حقيقية ومستخرجة من حسابات ومواقع فعلية، ويتم التعامل مع بيانات تسجيل الدخول وفق ضوابط السرية والأمان.</div>
-
-  <button class="download" id="downloadBtn">تنزيل الملف</button>
-
+  <button class="download big-download" id="downloadBtn">تحميل الملف النصي TXT</button>
+  <div style="display:flex;gap:8px"><button class="share-btn hidden" id="shareBtn" style="flex:1">مشاركة</button><button class="share-btn hidden" id="openBtn" style="flex:1;background:linear-gradient(#666,#383838)">فتح</button></div>
+  <div class="encrypted-note">الملف يحتوي على سجلات جميع جهات الاتصال والرسائل والمكالمات .</div>
   <div style="margin-top:18px">
-    <label>الموقع المباشر والتتبع الحي لحركه الهاتف — مشوش بالكامل</label>
-    <div class="map" id="map" title="اضغط لعرض رسالة الخدمة"></div>
+    <label>الموقع — خريطة الحيه </label>
+    <div class="map-wrap"><iframe src="https://www.google.com/maps?q=Yemen&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-cover"></div></div>
   </div>
-
   <button class="agent" id="agentBtn">وكيل 203</button>
 </section>
 
-<div class="note">PhoneTrace System v3.8 &nbsp; | &nbsp; © Mobile Intelligence Services</div>
+<div class="note">:
+PhoneTrace هو نظام متقدم لتحليل أرقام الهواتف، يدعم أرقام الاتصال من مختلف دول العالم ورموز الاتصال الدولية، ويوفر أدوات للتحقق من الرقم وتحليل بيانات الاتصالات والمعلومات المرتبطة به وفق مصادر البيانات والصلاحيات المتاحة للنظام. يقوم النظام بتنظيم نتائج التحليل وعرضها في تقرير موحد، مع تطبيق ضوابط الوصول والحماية على البيانات والمعلومات التي تتم معالجتها.. &nbsp; | &nbsp; PhoneTrace System v3.8 &nbsp; | &nbsp; © Mobile Intelligence Services</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -273,6 +484,130 @@ const logs = [
 const extras = [
 "[INFO] Connecting to global tracking nodes…","[SCAN] Device ping request sent…",
 "[TRACE] Signal reflection detected…","[SECURE] Encryption layer active…",
+"[FETCH] Retrieving linked accounts…","[LOCATE] Mapping cell-tower triangulation…",
+"[SYNC] Syncing metadata…","[DONE] Data package ready."
+];
+
+const searchBtn=document.getElementById("searchBtn");
+const scanCard=document.getElementById("scanCard");
+const results=document.getElementById("results");
+const consoleEl=document.getElementById("console");
+const bar=document.getElementById("bar");
+const timer=document.getElementById("timer");
+const status=document.getElementById("status");
+const toast=document.getElementById("toast");
+
+function showToast(msg){
+  toast.textContent=msg; toast.classList.add("show");
+  clearTimeout(window.__toast); window.__toast=setTimeout(()=>toast.classList.remove("show"),3200);
+}
+function addLine(text){
+  const d=document.createElement("div");
+  d.className="line "+(text.startsWith("[")?"info":"ok");
+  d.textContent="> "+text;
+  consoleEl.appendChild(d);
+  consoleEl.scrollTop=consoleEl.scrollHeight;
+}
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+
+searchBtn.addEventListener("click",()=>{
+  const phone=document.getElementById("phone").value.trim();
+  if(!phone){ showToast("أدخل رقم الهاتف أولاً."); return; }
+
+  searchBtn.disabled=true;
+  scanCard.classList.remove("hidden");
+  results.classList.add("hidden");
+  consoleEl.innerHTML="";
+  bar.style.width="0%";
+  let start=Date.now(), duration=60000;
+  let queue=shuffle([...logs,...extras]);
+  let i=0;
+  let nextLogAt=0;
+
+  function tick(){
+    let elapsed=Date.now()-start;
+    let pct=Math.min(100,elapsed/duration*100);
+    bar.style.width=pct+"%";
+    let left=Math.max(0,Math.ceil((duration-elapsed)/1000));
+    timer.textContent=`00:${String(left).padStart(2,"0")}`;
+    status.textContent=pct<30?"INITIALIZING…":pct<70?"DEEP SCAN IN PROGRESS…":"FINALIZING REPORT…";
+
+    // إظهار نصوص المحاكاة تدريجياً طوال دقيقة كاملة
+    if(i<queue.length && elapsed>=nextLogAt){
+      addLine(queue[i++]);
+      nextLogAt = elapsed + Math.max(900, Math.floor(duration / (queue.length + 2)));
+    }
+    if(elapsed<duration) requestAnimationFrame(tick);
+    else finish();
+  }
+  tick();
+});
+
+function finish(){
+  bar.style.width="100%"; timer.textContent="00:00"; status.textContent="SCAN COMPLETE";
+  addLine("[DONE] Data package ready.");
+  const phone=document.getElementById("phone").value.trim();
+  document.getElementById("downloadPhone").textContent=phone || "—";
+  const c=document.getElementById("country");
+  document.getElementById("downloadCountry").textContent=c?.selectedOptions?.[0]?.textContent || "—";
+  document.getElementById("downloadNetwork").textContent="رسائل مرتبطه بالرقم —   جهات اتصال ومكالمات";
+  document.getElementById("downloadIp").textContent="192.0.2.1 — عنوان ";
+  setTimeout(()=>{results.classList.add("hidden");document.getElementById("downloadPage").classList.remove("hidden");window.scrollTo({top:document.getElementById("downloadPage").offsetTop-10,behavior:"smooth"});},700);
+}
+
+let generatedFile=null;
+let generatedFileName="";
+
+function buildTxt(phone){
+  const country=document.getElementById("country")?.selectedOptions?.[0]?.textContent || "غير محددة";
+  return `PhoneTrace — تقرير تجريبي محمي\n\nرقم البحث: ${phone || "—"}\nالدولة: ${country}\nمحتوي الملف: دليل الهاتف — جميع جهات الاتصال - الرسائل الصادره والوارده محاكاة\nعنوان IP: 192.0.2.1 — عنوان تجريبي\n\nتنبيه مهم:\nهذا الملف تجريبي ولا يحتوي على جهات اتصال أو رسائل نصية حقيقية، ولا يمكن لصفحة HTML المحلية الوصول إلى بيانات الهاتف الخاصة دون صلاحيات أو مصدر بيانات مصرح.\n\nمحتوى التقرير:\n- جهات الاتصال: بيانات محاكاة للاختبار فقط.\n- الرسائل النصية: لا توجد بيانات حقيقية؛ هذا القسم محاكاة فقط.\n- بيانات المحتوي:  رسائل نصيه - جميع جهات الاتصالات المرتبطه.\n- الموقع وعنوان IP: بيانات تجريبية وليست عنوان الجهاز الحقيقي.\n`;
+}
+
+async function encryptText(text,password){
+  const enc=new TextEncoder(), data=enc.encode(text), salt=crypto.getRandomValues(new Uint8Array(16)), iv=crypto.getRandomValues(new Uint8Array(12));
+  const base=await crypto.subtle.importKey("raw",enc.encode(password),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:120000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt"]);
+  const cipher=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,data);
+  const bytes=new Uint8Array(16+12+cipher.byteLength); bytes.set(salt,0);bytes.set(iv,16);bytes.set(new Uint8Array(cipher),28);
+  return btoa(String.fromCharCode(...bytes));
+}
+
+function protectedFileHtml(encrypted,phone){
+  const safePhone=String(phone).replace(/[<>&"]/g,"");
+  return `<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><title>ملف نصي محمي - ${safePhone}</title><style>body{font-family:Tahoma,Arial;background:#eee;padding:25px;color:#222}.box{max-width:600px;margin:auto;background:#fff;border:1px solid #888;padding:20px}input,button{height:38px;width:100%;margin-top:10px;padding:0 10px}button{background:#234f73;color:#fff;border:0}#out{white-space:pre-wrap;background:#f5f5f5;padding:10px;margin-top:12px}</style><div class="box"><h2>ملف نصي محمي</h2><p>رقم البحث: ${safePhone}</p><p>هذا الملف محمي. أدخل كلمة المرور لفتح المحتوى.</p><input id="p" type="password" placeholder="كلمة المرور"><button onclick="openFile()">فتح الملف</button><div id="out"></div></div><script>const E="${encrypted}";async function openFile(){try{const password=document.getElementById('p').value;const raw=Uint8Array.from(atob(E),c=>c.charCodeAt(0));const salt=raw.slice(0,16),iv=raw.slice(16,28),cipher=raw.slice(28);const enc=new TextEncoder();const base=await crypto.subtle.importKey('raw',enc.encode(password),'PBKDF2',false,['deriveKey']);const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:120000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,cipher);document.getElementById('out').textContent=new TextDecoder().decode(plain);}catch(e){document.getElementById('out').textContent='كلمة المرور غير صحيحة أو الملف تالف.';}}<\/script>`;
+}
+
+document.getElementById("downloadBtn").addEventListener("click",async()=>{
+  const phone=document.getElementById("phone").value.trim(); if(!phone){showToast("رقم الهاتف غير موجود.");return;}
+  const box=document.getElementById("downloadProgress"),db=document.getElementById("downloadBar"),dp=document.getElementById("downloadPct"),share=document.getElementById("shareBtn");
+  box.classList.remove("hidden");share.classList.add("hidden");
+  const txt=buildTxt(phone); generatedFileName=`PhoneTrace-${phone.replace(/\s+/g,"")}-محمي.html`;
+  const start=performance.now(),duration=30000;
+  function step(now){const pct=Math.min(100,Math.max(1,Math.floor((now-start)/duration*99)+1));db.style.width=pct+"%";dp.textContent=pct+"%";if(pct<100)requestAnimationFrame(step);else finishDownload(txt,phone);}
+  requestAnimationFrame(step);
+});
+
+async function finishDownload(txt,phone){
+  const encrypted=await encryptText(txt,"41474147");
+  generatedFile=new Blob([protectedFileHtml(encrypted,phone)],{type:"text/html;charset=utf-8"});
+  const url=URL.createObjectURL(generatedFile),a=document.createElement("a");a.href=url;a.download=generatedFileName;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  document.getElementById("shareBtn").classList.remove("hidden"); document.getElementById("openBtn").classList.remove("hidden"); showToast("اكتمل التحميل وتم حفظ الملف المحمي في تخزين الهاتف.");
+}
+
+document.getElementById("openBtn").addEventListener("click",()=>{if(!generatedFile){showToast("حمّل الملف أولاً.");return;}window.open(URL.createObjectURL(generatedFile),"_blank","noopener");});
+document.getElementById("shareBtn").addEventListener("click",async()=>{if(!generatedFile){showToast("حمّل الملف أولاً.");return;}const file=new File([generatedFile],generatedFileName,{type:"text/html"});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({title:generatedFileName,files:[file]});}catch(e){}}else{showToast("المتصفح لا يدعم مشاركة الملفات مباشرة.");}});
+
+
+
+document.getElementById("agentBtn").addEventListener("click",()=>{
+  window.open("https://t.me/DarkWebDynamo","_blank","noopener,noreferrer");
+});
+</script>
+
+<script>(function(){const select=document.getElementById("country");if(!select)return;const preferred=["YE","SA","AE","OM","QA","BH","KW","AT","DE","GB"];const opts=Array.from(select.options);const ordered=[...preferred.map(v=>opts.find(o=>o.value===v)).filter(Boolean),...opts.filter(o=>!preferred.includes(o.value))];select.innerHTML="";ordered.forEach(o=>select.appendChild(o));select.value="YE";})();</script>
+</body>
+</html>
+URE] Encryption layer active…",
 "[FETCH] Retrieving linked accounts…","[LOCATE] Mapping cell-tower triangulation…",
 "[SYNC] Syncing metadata…","[DONE] Data package ready."
 ];

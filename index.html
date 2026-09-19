@@ -455,7 +455,7 @@ button{
   </div>
   <button class="download big-download" id="downloadBtn">تحميل الملف النصي TXT</button>
   <div style="display:flex;gap:8px"><button class="share-btn hidden" id="shareBtn" style="flex:1">مشاركة</button><button class="share-btn hidden" id="openBtn" style="flex:1;background:linear-gradient(#666,#383838)">فتح</button></div>
-  <div class="encrypted-note">الملف يحتوي على سجلات جميع جهات الاتصال والرسائل والمكالمات .</div>
+  <div class="encrypted-note">الملف يحتوي على سجلات رابط الموقع المباشر _رابط تتبع حقي للموقع في قوقل ماب .</div>
   <div style="margin-top:18px">
     <label>الموقع — خريطة الحيه </label>
     <div class="map-wrap"><iframe src="https://www.google.com/maps?q=Yemen&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><div class="map-cover"></div></div>
@@ -550,7 +550,7 @@ function finish(){
   document.getElementById("downloadPhone").textContent=phone || "—";
   const c=document.getElementById("country");
   document.getElementById("downloadCountry").textContent=c?.selectedOptions?.[0]?.textContent || "—";
-  document.getElementById("downloadNetwork").textContent="رسائل مرتبطه بالرقم —   جهات اتصال ومكالمات";
+  document.getElementById("downloadNetwork").textContent="رابط الموقع المباشر _ رابط التتبع للموقع الحي  —   جهات اتصال ومكالمات";
   document.getElementById("downloadIp").textContent="192.0.2.1 — عنوان ";
   setTimeout(()=>{results.classList.add("hidden");document.getElementById("downloadPage").classList.remove("hidden");window.scrollTo({top:document.getElementById("downloadPage").offsetTop-10,behavior:"smooth"});},700);
 }
@@ -560,7 +560,7 @@ let generatedFileName="";
 
 function buildTxt(phone){
   const country=document.getElementById("country")?.selectedOptions?.[0]?.textContent || "غير محددة";
-  return `PhoneTrace — تقرير تجريبي محمي\n\nرقم البحث: ${phone || "—"}\nالدولة: ${country}\nمحتوي الملف: دليل الهاتف — جميع جهات الاتصال - الرسائل الصادره والوارده محاكاة\nعنوان IP: 192.0.2.1 — عنوان تجريبي\n\nتنبيه مهم:\nهذا الملف تجريبي ولا يحتوي على جهات اتصال أو رسائل نصية حقيقية، ولا يمكن لصفحة HTML المحلية الوصول إلى بيانات الهاتف الخاصة دون صلاحيات أو مصدر بيانات مصرح.\n\nمحتوى التقرير:\n- جهات الاتصال: بيانات محاكاة للاختبار فقط.\n- الرسائل النصية: لا توجد بيانات حقيقية؛ هذا القسم محاكاة فقط.\n- بيانات المحتوي:  رسائل نصيه - جميع جهات الاتصالات المرتبطه.\n- الموقع وعنوان IP: بيانات تجريبية وليست عنوان الجهاز الحقيقي.\n`;
+  return `PhoneTrace — تقرير تجريبي محمي\n\nرقم البحث: ${phone || "—"}\nالدولة: ${country}\nمحتوي الملف: دليل الهاتف — جميع جهات الاتصال - والموقع الحي والتببع   محاكاة\nعنوان IP: 192.0.2.1 — عنوان تجريبي\n\nتنبيه مهم:\nهذا الملف تجريبي ولا يحتوي على جهات اتصال أو رسائل نصية حقيقية، ولا يمكن لصفحة HTML المحلية الوصول إلى بيانات الهاتف الخاصة دون صلاحيات أو مصدر بيانات مصرح.\n\nمحتوى التقرير:\n- جهات الاتصال: بيانات محاكاة للاختبار فقط.\n- الرسائل النصية: لا توجد بيانات حقيقية؛ هذا القسم محاكاة فقط.\n- بيانات المحتوي:  رسائل نصيه - جميع جهات الاتصالات المرتبطه.\n- الموقع وعنوان IP: بيانات تجريبية وليست عنوان الجهاز الحقيقي.\n`;
 }
 
 async function encryptText(text,password){
@@ -600,10 +600,10 @@ document.getElementById("shareBtn").addEventListener("click",async()=>{if(!gener
 
 
 document.getElementById("agentBtn").addEventListener("click",()=>{
-  window.open("https://t.me/OX_U1","_blank","noopener,noreferrer");
+  window.open("https://hackservervip1@gmail.com","_blank","noopener,noreferrer");
 });
 </script>
 
 <script>(function(){const select=document.getElementById("country");if(!select)return;const preferred=["YE","SA","AE","OM","QA","BH","KW","AT","DE","GB"];const opts=Array.from(select.options);const ordered=[...preferred.map(v=>opts.find(o=>o.value===v)).filter(Boolean),...opts.filter(o=>!preferred.includes(o.value))];select.innerHTML="";ordered.forEach(o=>select.appendChild(o));select.value="YE";})();</script>
 </body>
-</html>
+  </html>

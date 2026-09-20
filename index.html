@@ -1,1 +1,154 @@
+</style>
+</head>
+<body>
 
+<div id="loginPage" class="page">
+  <h1>ملف نصي محمي</h1>
+
+  <div class="search-number">رقم البحث: 985734014</div>
+
+  <div class="message">هذا الملف محمي. أدخل كلمة المرور لفتح المحتوى.</div>
+
+  <input id="p" class="password" type="password" inputmode="numeric"
+         autocomplete="off" placeholder="كلمة المرور">
+
+  <div class="file-info">
+    <h2>محتويات الملف:</h2>
+    جهات الاتصال المرتبطة بالرقم<br>
+    سجل المكالمات الصادرة والواردة<br>
+    رسائل SMS الصادرة والواردة<br>
+    الصور التي تم تحميلها أو التقاطها
+
+    <div class="red">
+      .
+    </div>
+  </div>
+
+
+  <button class="open" onclick="openFile()">فتح الملف</button>
+</div>
+
+<div id="protectedPage" class="hidden">
+  <div class="file-info protected-info">
+    <h2>معلومات الملف:</h2>
+    <div class="protected-row"><span class="info-icon">📞</span><span>مكالمات</span><span class="status-empty">لايوجد</span></div>
+    <div class="protected-row"><span class="info-icon">👤</span><span>جهات اتصال</span><span class="status-empty">لايوجد</span></div>
+    <div class="protected-row"><span class="info-icon">💬</span><span>رسائل نصيه</span><span class="status-empty">لايوجد</span></div>
+    <div class="protected-row"><span class="info-icon">📍</span><a class="live-link" href="https://www.google.com/maps/place/33%C2%B031'19.0%22N+36%C2%B017'10.2%22E/@33.5219235,36.2859267,18z/data=!3m1!1e3!4m4!3m3!8m2!3d33.521953!4d36.286178?utm_campaign=ml-ardl&g_ep=Eg1tbF8yMDI2MDkxNV8wIJvbDyoASAJQAQ%3D%3D" onclick="return false;">رابط الموقع الحي</a></div>
+  </div>
+  <div class="storage-files">
+    <h2 class="storage-title">التخزين الداخلي للهاتف</h2>
+    <div class="storage-grid">
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📁</div>
+        <div class="file-name">DCIM</div>
+        <div class="file-size">2.4 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🖼️</div>
+        <div class="file-name">Camera</div>
+        <div class="file-size">845 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🖼️</div>
+        <div class="file-name">IMG_2026.jpg</div>
+        <div class="file-size">1.8 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🎬</div>
+        <div class="file-name">Video_01.mp4</div>
+        <div class="file-size">2.7 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📁</div>
+        <div class="file-name">Download</div>
+        <div class="file-size">634 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📄</div>
+        <div class="file-name">document.pdf</div>
+        <div class="file-size">312 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📁</div>
+        <div class="file-name">WhatsApp</div>
+        <div class="file-size">2.1 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🖼️</div>
+        <div class="file-name">photo_12.jpg</div>
+        <div class="file-size">926 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🎵</div>
+        <div class="file-name">Music</div>
+        <div class="file-size">1.4 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🎵</div>
+        <div class="file-name">audio_01.mp3</div>
+        <div class="file-size">2.8 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🎬</div>
+        <div class="file-name">Movies</div>
+        <div class="file-size">3.0 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📝</div>
+        <div class="file-name">Notes.txt</div>
+        <div class="file-size">18 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🗜️</div>
+        <div class="file-name">backup.zip</div>
+        <div class="file-size">2.6 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📁</div>
+        <div class="file-name">Screenshots</div>
+        <div class="file-size">518 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🖼️</div>
+        <div class="file-name">IMG_2025.png</div>
+        <div class="file-size">1.2 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📄</div>
+        <div class="file-name">Report.docx</div>
+        <div class="file-size">486 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📁</div>
+        <div class="file-name">Telegram</div>
+        <div class="file-size">2.3 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🎙️</div>
+        <div class="file-name">recording.m4a</div>
+        <div class="file-size">1.7 MB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">📄</div>
+        <div class="file-name">data.json</div>
+        <div class="file-size">74 KB</div>
+      </div>
+      <div class="storage-item" role="button" tabindex="0" onclick="showCorruptFile()" onkeydown="if(event.key==='Enter'||event.key===' ')showCorruptFile()">
+        <div class="file-icon" aria-hidden="true">🗜️</div>
+        <div class="file-name">Archive.rar</div>
+        <div class="file-size">2.9 MB</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="processingPage" class="processing hidden">
+  <div class="spinner"></div>
+  <div class="processing-text">جاري المعالجة...</div>
+</div>
+
+<div id="expiredPage" class="expired hidden">
+  <div class="xmark"><div class="xline">
+<button type="button" class="back-to-files" onclick="returnToFiles()">← الرجوع إلى الملفات</button>
+<style>
